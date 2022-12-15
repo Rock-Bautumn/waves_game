@@ -1,0 +1,8 @@
+# meta
+#.gitignore
+
+# test files
+test/
+
+# binaries
+waves
