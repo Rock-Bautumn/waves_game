@@ -5,7 +5,7 @@ all: waves
 waves: objs/main.o objs/map.o
 	g++ objs/main.o objs/map.o -lncursesw -o waves
 
-objs/main.o: src/main.cpp
+objs/main.o: src/main.cpp src/player.h src/wave.h
 	g++ -c src/main.cpp -lncursesw -o objs/main.o
 
 objs/map.o: src/map.cpp

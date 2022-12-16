@@ -2,12 +2,10 @@
 #define PLAYER_H
 
 #include "waves.h"
-
 #include "map.h"
 
 #define CHAR_PLAYER L"🧍‍♀️"
-#define ISLAND_Y 33
-#define ISLAND_X 9
+
 
 int safe_to_move(wchar_t *new_loc_char)
 {
@@ -79,7 +77,7 @@ void Player::mvlt()
 {
 
     mvin_wch(yLoc, xLoc - 1, &standingon);
-    if (xLoc == 0 || !safe_to_move(standingon.chars))
+    if (xLoc < 47 || !safe_to_move(standingon.chars))
         return;
     xLoc--;
 
@@ -89,7 +87,7 @@ void Player::mvrt()
 {
 
     mvin_wch(yLoc, xLoc + 1, &standingon);
-    if (xLoc == 31 || !safe_to_move(standingon.chars))
+    if (xLoc > 76 || !safe_to_move(standingon.chars))
         return;
     mvin_wch(yLoc, xLoc + 2, &standingon);
     if (!safe_to_move(standingon.chars))

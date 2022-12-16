@@ -1,7 +1,7 @@
 #include "waves.h"
 #include "map.h"
 #include "player.h"
-
+#include "wave.h"
 
 
 int main()
@@ -21,19 +21,23 @@ int main()
         start_color();
         init_color(COLOR_BLUE, 0, 384, 555);
         init_color(COLOR_YELLOW, 963, 842, 690);
+        // 8 = test, 9 = sea, 10 = sand, 11 = sky
         init_pair(8, COLOR_MAGENTA, COLOR_GREEN);
         init_pair(9, COLOR_GREEN, COLOR_BLUE);
         init_pair(10, COLOR_YELLOW, COLOR_YELLOW);
         init_pair(11, COLOR_CYAN, COLOR_CYAN);
     } 
     // getch();
-    Player *plr = new Player(20, 20, CHAR_PLAYER);
+    Player *plr = new Player(9, 46, CHAR_PLAYER);
+    Wave *wave = new Wave();
 
     do
     {
         erase();
         print_base();
         plr->display();
+        wave->update();
+        wave->display();
         refresh();
         pchoice = plr->getmv();
         usleep(8000); // 8000 microseconds = 125 delays per second (fps limiter)
@@ -54,5 +58,12 @@ int main()
 
     // getch();
     endwin();
+    /*
+    struct timespec this_time;
+    clock_gettime(CLOCK_MONOTONIC_COARSE, &this_time);
+
+
+    printf("diff = %ld\n", (this_time.tv_sec - wave->get_start()));
+    */
     return EXIT_SUCCESS;
 }

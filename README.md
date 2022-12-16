@@ -16,7 +16,7 @@ $ sudo ./build.sh
 
 Run the game:
 
-./waves
+$ ./waves
 
 Controls:
 

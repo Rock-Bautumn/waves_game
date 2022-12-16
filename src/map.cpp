@@ -30,22 +30,33 @@ void print_base(void)
             */
             if (y < 4)
                 add_wch(&sky);
-            else if ((y == 11 && x == 4) || (y == 14 && x == 8))
+            else if ((y == 12 && x == 74) || (y == 21 && x == 68))
                 {
                     add_wch(&tree);
                     x++;
                 }
-            else if (4 < x && x < 8 && 20 < y && y < 23)
+            else if ((y == 11 && x == 58) || (y == 14 && x == 60))
+                {
+                    add_wch(&tree);
+                    x++;
+                }                
+            else if (64 < x && x < 68 && 18 < y && y < 21)
                 {
                     add_wch(&tree);
                     x++;
                 }
-            else if (y == 16 && x == 17)
+            else if (50 < x && x < 54 && 20 < y && y < 23)
+                {
+                    add_wch(&tree);
+                    x++;
+                }
+            else if (y == 13 && x == 53)
                 {
                     add_wch(&bin);
                     // x++;
                 }
-            else if (y > 8 && x < 33)
+                // printw("▓");
+            else if (y > 8 && x > 45)
                 add_wch(&sand);
                 // printw("▓");
             else
