@@ -5,6 +5,9 @@
 #define WC_SKY L"▒"
 #define WC_SAND L"▓"
 #define WC_BIN L"🗑️ "
+#define WC_MAGLA L"🔎"
+#define WC_PRINTS L"👣"
+#define WC_FIRE L"🔥"
 
 void print_base(void);
 

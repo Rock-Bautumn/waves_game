@@ -3,7 +3,6 @@
 #include "player.h"
 #include "wave.h"
 
-
 int main()
 {
     int y = 5, x = 5, pchoice = 0;
@@ -28,8 +27,8 @@ int main()
         init_pair(11, COLOR_CYAN, COLOR_CYAN);
     } 
     // getch();
-    Player *plr = new Player(9, 46, CHAR_PLAYER);
     Wave *wave = new Wave();
+    Player *plr = new Player(wave, 9, 46, CHAR_PLAYER);
 
     do
     {
