@@ -14,13 +14,14 @@ class Ship
         void update();
         void display();
         void look_for_fire();
+
     private:
         Player *plr;
         cchar_t ship_char;
         struct timespec start_time;
         struct timespec last_update;
         size_t seen_smoke_secs = 0;
-
+        void win_game();
 };
 
 Ship::Ship(Player *this_plr)
@@ -38,6 +39,12 @@ long int Ship::get_start()
     return start_time.tv_sec;
 }
 
+void Ship::look_for_fire()
+{
+    if (plr->fire_is_lit())
+        seen_smoke_secs++;
+
+}
 void Ship::update()
 {
     struct timespec this_time;
@@ -50,11 +57,16 @@ void Ship::update()
     // do once per second
     if ((this_time.tv_sec - last_update.tv_sec) > 0)
     {
+        look_for_fire();
         last_update.tv_sec = this_time.tv_sec;
     }
 
+    if (seen_smoke_secs == 5)
+        win_game();
+
     if (frame_num == rand() % 3 + 15)
     {
+        seen_smoke_secs = 0;
         clock_gettime(CLOCK_MONOTONIC_COARSE, &start_time);
         start_time.tv_sec += rand() % 180 + 180;
         last_update.tv_sec = start_time.tv_sec;
@@ -62,6 +74,24 @@ void Ship::update()
     }
 
 }
+
+void Ship::win_game()
+{
+
+
+    mvprintw(20, 10, "You were rescued by the ship!");
+    mvprintw(21, 15, "You won the game!");
+    mvprintw(22, 10, "Press any key to exit...");
+    mvprintw(4, 20, "                    ");
+    
+    mvadd_wch(8, 50, &ship_char);
+
+    nodelay(stdscr, FALSE);
+    getch();
+    endwin();
+    exit(0);
+}
+
 
 void Ship::display()
 {
