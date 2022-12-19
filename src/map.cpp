@@ -5,7 +5,6 @@ void print_base(int trash_qty)
 {
     int y;
     int x;
-    // cchar_t standingon;
     cchar_t sand = { 0 };
     cchar_t sky = { 0 };
     cchar_t tree = { 0 };
@@ -22,10 +21,6 @@ void print_base(int trash_qty)
     {
         for (x = 0; x < 79; x++)
         {
-            /*
-            else
-                printw("🔥");
-            */
             if (y < 4)
                 add_wch(&sky);
             else if ((y == 12 && x == 74) || (y == 21 && x == 68))
@@ -58,16 +53,13 @@ void print_base(int trash_qty)
                 add_wch(&bin);
                 // x++;
             }
-                // printw("▓");
             else if (y > 8 && x > 45)
                 add_wch(&sand);
-                // printw("▓");
             else if (y == 9 && x == 1)
             {
                 printw("Trash in bin:%3d", trash_qty);
                 x += 15;
             }
-
             else if (y == 10 && x == 1)
             {
                 printw("Holding trash [");
@@ -76,15 +68,11 @@ void print_base(int trash_qty)
             else if (y == 10 && x == 18)
                 printw("]");
             else
-                // printw("░");
                 printw(" ");
         }
         printw("\n");
     }
-    // refresh();
-    /* mvin_wch(11, 4, &standingon);
-
-
+    /*
     mvadd_wch(2, 2, &standingon);
     if (wcsncmp(standingon.chars, tree.chars, 2) == 0)
             mvadd_wch(2, 20, &standingon);

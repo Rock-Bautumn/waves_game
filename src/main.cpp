@@ -56,9 +56,6 @@ int main()
         attroff(COLOR_PAIR(9));
     }
 
-    // mvprintw(0, 0, "🔥\n");
-
-    // mvprintw(y, x, "Press any key to exit...\n");
     endwin();
     return EXIT_SUCCESS;
 }

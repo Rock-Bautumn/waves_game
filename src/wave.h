@@ -67,9 +67,6 @@ void Wave::update()
             beach[frame_num] = rand() % 6 + 1;
     }
 
-    // mvin_wch(frame_num + 9, 47, &beach_square);
-    // mvadd_wch(2, 2, &beach_square);
-
     if (frame_num >= 15)
     {
         clock_gettime(CLOCK_MONOTONIC_COARSE, &start_time);

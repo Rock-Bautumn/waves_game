@@ -28,9 +28,8 @@ int safe_to_move(wchar_t *new_loc_char)
         return FALSE;
     else if (wcsncmp(LC_TRASH6, new_loc_char, 2) == 0)
         return FALSE;
-    /* else if (wcsncmp(WC_MAGLA, new_loc_char, 3) == 0)
+    else if (wcsncmp(WC_MAGLA, new_loc_char, 2) == 0)
         return FALSE;
-    */
     return TRUE;
 }
 
@@ -46,6 +45,7 @@ class Player
         int getmv();
         void display();
         int get_trash_qty();
+        int fire_is_lit();
 
     private:
         Wave *wave;
@@ -54,6 +54,7 @@ class Player
         cchar_t standingon;
         wchar_t item_holding_char[5] = L"";
         cchar_t item_hold_print_char = { 0 };
+        int fire_is_lit = FALSE;
         int grabbed_trash(int facing_y, int facing_x);
         int tossed_trash(int facing_y, int facing_x);
         int used_magla(int facing_y, int facing_x);
@@ -138,10 +139,9 @@ int Player::grabbed_trash(int facing_y, int facing_x)
         goto hold_it;
     else if (wcsncmp(LC_TRASH6, fb_chars, 2) == 0)
         goto hold_it;
-    /* else if (wcsncmp(WC_MAGLA, new_loc_char, 3) == 0)
-        return FALSE;
-    */
+
     return FALSE;
+
     hold_it:
     wcsncpy(item_holding_char, facing_block.chars, 2);
     setcchar(&item_hold_print_char, facing_block.chars, WA_NORMAL, 12, NULL);
@@ -162,7 +162,6 @@ int Player::tossed_trash(int facing_y, int facing_x)
         {
             wcsncpy(item_holding_char, L"", 2);
             wcsncpy(item_hold_print_char.chars, L"", 2);
-            // item_holding_char[0] = 0;
             bin_trash_qty++;
         }
         return TRUE;
@@ -244,8 +243,6 @@ int Player::getmv()
 void Player::display()
 {
     mvadd_wch(yLoc, xLoc, &charchar);
-    // mvadd_wch(9, 2, &item_hold_print_char);
-    // mvaddwstr(10, 2, L"Holding item [");
     mvadd_wchstr(10, 16, &item_hold_print_char);
 }
 
