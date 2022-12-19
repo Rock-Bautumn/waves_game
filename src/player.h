@@ -46,23 +46,25 @@ class Player
         int getmv();
         void display();
 
-
     private:
         Wave *wave;
         int xLoc, yLoc, bin_trash_qty = 0, face_direction = UNUSED_DIR;
         cchar_t charchar = { 0 };
         cchar_t standingon;
         wchar_t item_holding_char[5] = L"";
+        cchar_t item_hold_print_char = { 0 };
         int grabbed_trash(int facing_y, int facing_x);
         int tossed_trash(int facing_y, int facing_x);
         int used_magla(int facing_y, int facing_x);
         void action();
 };
 
-Player::Player(Wave *wave, int y, int x,  const wchar_t *c)
+Player::Player(Wave *this_wave, int y, int x,  const wchar_t *c)
 {
     xLoc = x;
     yLoc = y;
+
+    wave = this_wave;
     setcchar(&charchar, c, WA_NORMAL, 10, NULL);
 }
 
@@ -117,7 +119,7 @@ int Player::grabbed_trash(int facing_y, int facing_x)
     cchar_t facing_block = { 0 };
     wchar_t *fb_chars;
 
-    if (item_holding_char != NULL)
+    if (wcsncmp(item_holding_char, L"", 2) != 0)
         return FALSE;
 
     mvin_wch(facing_y, facing_x, &facing_block);
@@ -141,9 +143,8 @@ int Player::grabbed_trash(int facing_y, int facing_x)
     return FALSE;
     hold_it:
     wcsncpy(item_holding_char, facing_block.chars, 2);
-
+    setcchar(&item_hold_print_char, facing_block.chars, WA_NORMAL, 12, NULL);
     wave->clean_beach(facing_y - 9);
-
     return TRUE;
 }
 
@@ -155,9 +156,12 @@ int Player::tossed_trash(int facing_y, int facing_x)
     mvin_wch(facing_y, facing_x, &facing_block);
     fb_chars = facing_block.chars;
     if (wcsncmp(WC_BIN, fb_chars, 2) == 0)
-    {   if (wcsncmp(item_holding_char, L"",2) != 0)
+    {
+        if (wcsncmp(item_holding_char, L"", 2) != 0)
         {
             wcsncpy(item_holding_char, L"", 2);
+            wcsncpy(item_hold_print_char.chars, L"", 2);
+            // item_holding_char[0] = 0;
             bin_trash_qty++;
         }
         return TRUE;
@@ -193,11 +197,11 @@ void Player::action()
     {
         if (xLoc > 77)
             return;
-        facing_x++;
+        facing_x += 2;
     }
     else if (face_direction == FACING_DOWN)
     {
-        if (xLoc > 22)
+        if (yLoc > 22)
             return;
         facing_y++;
     }
@@ -239,6 +243,10 @@ int Player::getmv()
 void Player::display()
 {
     mvadd_wch(yLoc, xLoc, &charchar);
+    // mvadd_wch(9, 2, &item_hold_print_char);
+    // mvaddwstr(10, 2, L"Holding item [");
+    mvadd_wchstr(10, 16, &item_hold_print_char);
+    mvprintw(9, 16, "%d", bin_trash_qty);
 }
 
 #endif /* PLAYER_H */

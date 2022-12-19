@@ -14,6 +14,7 @@
 class Wave
 {
     public:
+        char beach[15] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         Wave(void);
         long int get_start();
         void update();
@@ -29,7 +30,6 @@ class Wave
         cchar_t trash4_char;
         cchar_t trash5_char;
         cchar_t trash6_char;
-        char beach[15] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         struct timespec start_time;
         struct timespec last_update;
 };
@@ -63,7 +63,7 @@ void Wave::update()
     if ((this_time.tv_sec - last_update.tv_sec) > 0)
     {
         last_update.tv_sec = this_time.tv_sec;
-        if (beach[frame_num] == 0 && 5 == rand() % 10 + 1)
+        if (beach[frame_num] == 0 && 5 == rand() % 6 + 1)
             beach[frame_num] = rand() % 6 + 1;
     }
 
@@ -116,7 +116,7 @@ void Wave::display()
     for (i = 0; i < 15; i++)
     {
         if (beach[i] != 0)
-        mvadd_wch(9 + i, 46, get_trash(i));
+            mvadd_wch(9 + i, 46, get_trash(i));
     }
 }
 

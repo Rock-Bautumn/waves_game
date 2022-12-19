@@ -59,8 +59,21 @@ void print_base(void)
             else if (y > 8 && x > 45)
                 add_wch(&sand);
                 // printw("▓");
+            else if (y == 9 && x == 1)
+            {
+                printw("Trash in bin:");
+                x += 12;
+            }
+            else if (y == 10 && x == 1)
+            {
+                printw("Holding trash [");
+                x += 14;
+            }
+            else if (y == 10 && x == 18)
+                printw("]");
             else
-                printw("░");
+                // printw("░");
+                printw(" ");
         }
         printw("\n");
     }

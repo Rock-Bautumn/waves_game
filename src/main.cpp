@@ -20,11 +20,12 @@ int main()
         start_color();
         init_color(COLOR_BLUE, 0, 384, 555);
         init_color(COLOR_YELLOW, 963, 842, 690);
-        // 8 = test, 9 = sea, 10 = sand, 11 = sky
+        // 8 = test, 9 = sea, 10 = sand, 11 = sky, 12 = text on sea
         init_pair(8, COLOR_MAGENTA, COLOR_GREEN);
-        init_pair(9, COLOR_GREEN, COLOR_BLUE);
+        init_pair(9, COLOR_YELLOW, COLOR_BLUE);
         init_pair(10, COLOR_YELLOW, COLOR_YELLOW);
         init_pair(11, COLOR_CYAN, COLOR_CYAN);
+        init_pair(12, COLOR_WHITE, COLOR_BLUE);
     } 
     // getch();
     Wave *wave = new Wave();

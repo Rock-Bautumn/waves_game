@@ -21,4 +21,5 @@ $ ./waves
 Controls:
 
 - Arrow keys move the player
+- Spacebar performs the player action on the character the player is facing
 - 'x' (lower case) exits the game
