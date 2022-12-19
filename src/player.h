@@ -44,6 +44,7 @@ class Player
         void mvlt();
         int getmv();
         void display();
+        void update();
         int get_trash_qty();
         int fire_is_lit();
 
@@ -54,7 +55,10 @@ class Player
         cchar_t standingon;
         wchar_t item_holding_char[5] = L"";
         cchar_t item_hold_print_char = { 0 };
-        struct timespec fire_start_time;
+        struct timespec fire_start_time = { 0 , 0 };
+        cchar_t fire_char = { 0 };
+
+        struct timespec last_update;
         int grabbed_trash(int facing_y, int facing_x);
         int tossed_trash(int facing_y, int facing_x);
         int used_magla(int facing_y, int facing_x);
@@ -68,6 +72,8 @@ Player::Player(Wave *this_wave, int y, int x,  const wchar_t *c)
 
     wave = this_wave;
     setcchar(&charchar, c, WA_NORMAL, 10, NULL);
+    setcchar(&fire_char, WC_FIRE, WA_NORMAL, 10, NULL);
+
 }
 
 void Player::mvup()
@@ -114,6 +120,13 @@ void Player::mvrt()
     if (!safe_to_move(standingon.chars))
         return;
     xLoc++;
+}
+
+int Player::fire_is_lit()
+{
+    if (fire_start_time.tv_sec == 0)
+        return FALSE;
+    return TRUE;
 }
 
 int Player::grabbed_trash(int facing_y, int facing_x)
@@ -163,6 +176,8 @@ int Player::tossed_trash(int facing_y, int facing_x)
             wcsncpy(item_holding_char, L"", 2);
             wcsncpy(item_hold_print_char.chars, L"", 2);
             bin_trash_qty++;
+            if (bin_trash_qty > 999)
+                bin_trash_qty = 999;
         }
         return TRUE;
     }
@@ -172,7 +187,20 @@ int Player::tossed_trash(int facing_y, int facing_x)
 
 int Player::used_magla(int facing_y, int facing_x)
 {
-    return FALSE;
+    cchar_t facing_block = { 0 };
+    wchar_t *fb_chars;
+
+    mvin_wch(facing_y, facing_x, &facing_block);
+    fb_chars = facing_block.chars;
+    if (wcsncmp(WC_MAGLA, fb_chars, 2) != 0)
+        return FALSE;
+
+    if (bin_trash_qty > 0)
+    {
+        clock_gettime(CLOCK_MONOTONIC_COARSE, &fire_start_time);
+        last_update.tv_sec = fire_start_time.tv_sec;
+    }
+    return TRUE;
 }
 
 
@@ -240,10 +268,38 @@ int Player::getmv()
     return choice;
 }
 
+void Player::update()
+{
+    struct timespec this_time;
+    size_t frame_num;
+
+    clock_gettime(CLOCK_MONOTONIC_COARSE, &this_time);
+    frame_num = this_time.tv_sec - fire_start_time.tv_sec;
+    if (frame_num < 0)
+        return;
+    // do once per second
+    if ((this_time.tv_sec - last_update.tv_sec) > 0)
+    {
+        if (fire_is_lit())
+        {
+            bin_trash_qty--;
+
+            if (bin_trash_qty <= 0)
+                fire_start_time.tv_sec = 0;
+
+        }
+        last_update.tv_sec = this_time.tv_sec;
+    }
+
+}
+
 void Player::display()
 {
     mvadd_wch(yLoc, xLoc, &charchar);
     mvadd_wchstr(10, 16, &item_hold_print_char);
+    if (fire_is_lit())
+        mvadd_wch(12, 53, &fire_char);
+
 }
 
 int Player::get_trash_qty()

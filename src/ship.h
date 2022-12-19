@@ -2,25 +2,30 @@
 #define SHIP_H
 
 #include "waves.h"
+#include "player.h"
+
 #define LC_SHIP L"🛳️"
 
 class Ship
 {
     public:
-        Ship(void);
+        Ship(Player *);
         long int get_start();
         void update();
         void display();
-
+        void look_for_fire();
     private:
+        Player *plr;
         cchar_t ship_char;
         struct timespec start_time;
         struct timespec last_update;
         size_t seen_smoke_secs = 0;
+
 };
 
-Ship::Ship(void)
+Ship::Ship(Player *this_plr)
 {
+    plr = this_plr;
     setcchar(&ship_char, LC_SHIP, WA_NORMAL, 9, NULL);
     clock_gettime(CLOCK_MONOTONIC_COARSE, &start_time);
     start_time.tv_sec += rand() % 20 + 5;

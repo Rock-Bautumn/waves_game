@@ -33,12 +33,13 @@ int main()
 
     Wave *wave = new Wave();
     Player *plr = new Player(wave, 9, 46, CHAR_PLAYER);
-    Ship *ship = new Ship();
+    Ship *ship = new Ship(plr);
 
     do
     {
         erase();
         print_base(plr->get_trash_qty());
+        plr->update();
         plr->display();
         wave->update();
         wave->display();
