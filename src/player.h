@@ -54,7 +54,7 @@ class Player
         cchar_t standingon;
         wchar_t item_holding_char[5] = L"";
         cchar_t item_hold_print_char = { 0 };
-        int fire_is_lit = FALSE;
+        struct timespec fire_start_time;
         int grabbed_trash(int facing_y, int facing_x);
         int tossed_trash(int facing_y, int facing_x);
         int used_magla(int facing_y, int facing_x);
