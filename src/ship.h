@@ -79,9 +79,9 @@ void Ship::win_game()
 {
 
 
-    mvprintw(20, 10, "You were rescued by the ship!");
-    mvprintw(21, 15, "You won the game!");
-    mvprintw(22, 10, "Press any key to exit...");
+    mvprintw(19, 10, "You were rescued by the ship!");
+    mvprintw(20, 16, "You won the game!");
+    mvprintw(22, 12, "Press any key to exit...");
     mvprintw(4, 20, "                    ");
     
     mvadd_wch(8, 50, &ship_char);
