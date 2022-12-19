@@ -45,6 +45,7 @@ class Player
         void mvlt();
         int getmv();
         void display();
+        int get_trash_qty();
 
     private:
         Wave *wave;
@@ -246,7 +247,12 @@ void Player::display()
     // mvadd_wch(9, 2, &item_hold_print_char);
     // mvaddwstr(10, 2, L"Holding item [");
     mvadd_wchstr(10, 16, &item_hold_print_char);
-    mvprintw(9, 16, "%d", bin_trash_qty);
 }
+
+int Player::get_trash_qty()
+{
+    return bin_trash_qty;
+}
+
 
 #endif /* PLAYER_H */

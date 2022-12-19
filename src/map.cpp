@@ -1,7 +1,7 @@
 #include "waves.h"
 #include "map.h"
 
-void print_base(void)
+void print_base(int trash_qty)
 {
     int y;
     int x;
@@ -61,9 +61,10 @@ void print_base(void)
                 // printw("▓");
             else if (y == 9 && x == 1)
             {
-                printw("Trash in bin:");
-                x += 12;
+                printw("Trash in bin:%3d", trash_qty);
+                x += 15;
             }
+
             else if (y == 10 && x == 1)
             {
                 printw("Holding trash [");

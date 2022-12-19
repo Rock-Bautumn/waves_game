@@ -34,7 +34,7 @@ int main()
     do
     {
         erase();
-        print_base();
+        print_base(plr->get_trash_qty());
         plr->display();
         wave->update();
         wave->display();

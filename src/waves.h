@@ -9,6 +9,6 @@
 #include <unistd.h>
 #include <cstdlib>
 
-void print_base(void);
+void print_base(int trash_qty);
 
 #endif
