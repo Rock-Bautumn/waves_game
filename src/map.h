@@ -9,7 +9,7 @@
 #define WC_PRINTS L"👣"
 #define WC_FIRE L"🔥"
 
-void print_base(void);
+// void print_base(void);
 
 
 #endif

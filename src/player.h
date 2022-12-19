@@ -232,7 +232,7 @@ int Player::getmv()
         case KEY_RIGHT:
             mvrt();
             break;
-        case 'b':
+        case ' ':
             action();
             break;
         default:

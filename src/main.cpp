@@ -2,6 +2,7 @@
 #include "map.h"
 #include "player.h"
 #include "wave.h"
+#include "ship.h"
 
 int main()
 {
@@ -26,10 +27,13 @@ int main()
         init_pair(10, COLOR_YELLOW, COLOR_YELLOW);
         init_pair(11, COLOR_CYAN, COLOR_CYAN);
         init_pair(12, COLOR_WHITE, COLOR_BLUE);
-    } 
-    // getch();
+
+        attron(COLOR_PAIR(9));
+    }
+
     Wave *wave = new Wave();
     Player *plr = new Player(wave, 9, 46, CHAR_PLAYER);
+    Ship *ship = new Ship();
 
     do
     {
@@ -38,32 +42,23 @@ int main()
         plr->display();
         wave->update();
         wave->display();
+        ship->update();
+        ship->display();
         refresh();
         pchoice = plr->getmv();
         usleep(8000); // 8000 microseconds = 125 delays per second (fps limiter)
     } while (pchoice != 'x');
+
     nodelay(stdscr, FALSE);
 
-
+    if (has_colors())
+    {
+        attroff(COLOR_PAIR(9));
+    }
 
     // mvprintw(0, 0, "🔥\n");
-    /*
-    printw("columns is %d, lines is %d\n", COLS, LINES);
-    getch();
- */
 
-
-    // printw("€ 🔥\n");             literal Unicode
-    // mvprintw(y, x, "Press any key to exit...\n");              literal Unicode
-
-    // getch();
+    // mvprintw(y, x, "Press any key to exit...\n");
     endwin();
-    /*
-    struct timespec this_time;
-    clock_gettime(CLOCK_MONOTONIC_COARSE, &this_time);
-
-
-    printf("diff = %ld\n", (this_time.tv_sec - wave->get_start()));
-    */
     return EXIT_SUCCESS;
 }
