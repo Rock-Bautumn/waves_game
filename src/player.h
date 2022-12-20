@@ -12,11 +12,11 @@ enum facing_directions { UNUSED_DIR, FACING_UP, FACING_LEFT, FACING_RIGHT, FACIN
 
 int safe_to_move(wchar_t *new_loc_char)
 {
-    if  (wcsncmp(WC_TREE, new_loc_char, 3) == 0)
+    if (wcsncmp(WC_TREE, new_loc_char, 3) == 0)
         return FALSE;
     else if (wcsncmp(WC_BIN, new_loc_char, 2) == 0)
         return FALSE;
-    else if  (wcsncmp(LC_TRASH1, new_loc_char, 2) == 0)
+    else if (wcsncmp(LC_TRASH1, new_loc_char, 2) == 0)
         return FALSE;
     else if (wcsncmp(LC_TRASH2, new_loc_char, 2) == 0)
         return FALSE;
@@ -29,6 +29,8 @@ int safe_to_move(wchar_t *new_loc_char)
     else if (wcsncmp(LC_TRASH6, new_loc_char, 2) == 0)
         return FALSE;
     else if (wcsncmp(WC_MAGLA, new_loc_char, 2) == 0)
+        return FALSE;
+    else if (wcsncmp(WC_FIRE, new_loc_char, 2) == 0)
         return FALSE;
     return TRUE;
 }
@@ -73,7 +75,6 @@ Player::Player(Wave *this_wave, int y, int x,  const wchar_t *c)
     wave = this_wave;
     setcchar(&charchar, c, WA_NORMAL, 10, NULL);
     setcchar(&fire_char, WC_FIRE, WA_NORMAL, 10, NULL);
-
 }
 
 void Player::mvup()

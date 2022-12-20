@@ -11,11 +11,11 @@ void print_base(int trash_qty)
     cchar_t bin = { 0 };
     cchar_t magla = { 0 };
 
-        setcchar(&sky, WC_SKY, WA_NORMAL, 11, NULL);
-        setcchar(&sand, L"▓", WA_NORMAL, 10, NULL);
-        setcchar(&tree, WC_TREE, WA_NORMAL, 10, NULL);
-        setcchar(&bin, WC_BIN, WA_NORMAL, 10, NULL);
-        setcchar(&magla, WC_MAGLA, WA_NORMAL, 10, NULL);
+    setcchar(&sky, WC_SKY, WA_NORMAL, 11, NULL);
+    setcchar(&sand, L"▓", WA_NORMAL, 10, NULL);
+    setcchar(&tree, WC_TREE, WA_NORMAL, 10, NULL);
+    setcchar(&bin, WC_BIN, WA_NORMAL, 10, NULL);
+    setcchar(&magla, WC_MAGLA, WA_NORMAL, 10, NULL);
 
     for (y = 0; y < 24; y++)
     {
@@ -51,7 +51,7 @@ void print_base(int trash_qty)
             else if (y == 13 && x == 53)
             {
                 add_wch(&bin);
-                // x++;
+                // x++; We don't need this for some reason
             }
             else if (y > 8 && x > 45)
                 add_wch(&sand);
@@ -72,10 +72,5 @@ void print_base(int trash_qty)
         }
         printw("\n");
     }
-    /*
-    mvadd_wch(2, 2, &standingon);
-    if (wcsncmp(standingon.chars, tree.chars, 2) == 0)
-            mvadd_wch(2, 20, &standingon);
-    */
 
 }

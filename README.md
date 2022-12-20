@@ -1,6 +1,6 @@
 WAVES
 
-The task of this project is to make a quick hacksprint project in C++ for the "waves" prompt.
+The task of this project was to make a quick hacksprint project in C++ for the "waves" prompt.
 
 This is a demo game called "Waves of Trash" and it is a deserted island rescue made using ncurses.
 
@@ -26,4 +26,11 @@ Controls:
 
 NOTES:
 
-I wanted to make a console application that uses ncurses/ncursesw with emojis. I was mostly concerned with finishing on time, and there are a few things that could be less repetitive in the code. I'll add more things and clean it up eventually. The map.cpp file makes me sad. I tested this using xfce-terminal on Ubuntu 20.04 (Xubuntu). I don't see why it won't work on higher versions and most Linux distributions as well. I'm sure there are some cool things that can be done in the build.sh file to make the installations more portable. Feel free to send me feedback or a pull request.
+I wanted to make a console application that uses ncurses/ncursesw with emojis. I was mostly concerned with using as many functions from the library as possible, writing code that was fairly time efficient and not space efficient, and finishing on time. There are a few things that could be less repetitive in the code if they were put into an array or something, but I felt like that was cleaner but losing performance. I'll add more things and clean it up eventually. The map.cpp file makes me a little sad.
+
+I tested this using xfce-terminal on Ubuntu 20.04 (Xubuntu). I don't see why it won't work on higher versions and most Linux distributions as well. I'm sure there are some cool things that can be done in the build.sh file to make the installations more portable. Feel free to send me feedback.
+
+$1 = 3623
+$2 = @holbertonstudents
+$3 = .com
+email = $1 + $2 + $3
