@@ -51,7 +51,6 @@ class Player
         cchar_t item_hold_print_char = { 0 };
         struct timespec fire_start_time = { 0 , 0 };
         cchar_t fire_char = { 0 };
-
         struct timespec last_update;
         int grabbed_trash(int facing_y, int facing_x);
         int tossed_trash(int facing_y, int facing_x);
@@ -188,7 +187,6 @@ int Player::used_magla(int facing_y, int facing_x)
     }
     return TRUE;
 }
-
 
 void Player::action()
 {

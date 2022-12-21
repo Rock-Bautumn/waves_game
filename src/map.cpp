@@ -23,22 +23,10 @@ void print_base(int trash_qty)
         {
             if (y < 4)
                 add_wch(&sky);
-            else if ((y == 12 && x == 74) || (y == 21 && x == 68))
-            {
-                add_wch(&tree);
-                x++;
-            }
-            else if ((y == 11 && x == 58) || (y == 14 && x == 60))
-            {
-                add_wch(&tree);
-                x++;
-            }                
-            else if (64 < x && x < 68 && 18 < y && y < 21)
-            {
-                add_wch(&tree);
-                x++;
-            }
-            else if (50 < x && x < 54 && 20 < y && y < 23)
+            else if (((y == 12 && x == 74) || (y == 21 && x == 68)) ||
+                ((y == 11 && x == 58) || (y == 14 && x == 60)) ||
+                (64 < x && x < 68 && 18 < y && y < 21) ||
+                (50 < x && x < 54 && 20 < y && y < 23))
             {
                 add_wch(&tree);
                 x++;
