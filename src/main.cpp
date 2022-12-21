@@ -6,14 +6,13 @@
 
 int main()
 {
-    int y = 5, x = 5, pchoice = 0;
+    int pchoice = 0;
 
     setlocale(LC_ALL, "");
 
     initscr();
     cbreak();
     noecho();
-    nodelay(stdscr, TRUE);
     keypad(stdscr, TRUE);
     curs_set(0);
     if (can_change_color())
@@ -30,6 +29,21 @@ int main()
 
         attron(COLOR_PAIR(9));
     }
+    else
+    {
+        mvprintw(2, 8, "This game is designed to be used where colors can be changed.");
+        mvprintw(3, 1, "You might still be able to see different shades of gray with colored emoji.");
+        mvprintw(6, 27, "Do you want to continue?");
+        mvprintw(8, 36, "y/[n]");
+        pchoice = getch();
+        if (!(pchoice == 'y' || pchoice == 'Y'))
+        {
+            endwin();
+            return (EXIT_FAILURE);
+        }
+    }
+
+    nodelay(stdscr, TRUE);
 
     Wave *wave = new Wave();
     Player *plr = new Player(wave, 9, 46, CHAR_PLAYER);

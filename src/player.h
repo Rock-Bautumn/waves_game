@@ -12,26 +12,18 @@ enum facing_directions { UNUSED_DIR, FACING_UP, FACING_LEFT, FACING_RIGHT, FACIN
 
 int safe_to_move(wchar_t *new_loc_char)
 {
-    if (wcsncmp(WC_TREE, new_loc_char, 3) == 0)
-        return FALSE;
-    else if (wcsncmp(WC_BIN, new_loc_char, 2) == 0)
-        return FALSE;
-    else if (wcsncmp(LC_TRASH1, new_loc_char, 2) == 0)
-        return FALSE;
-    else if (wcsncmp(LC_TRASH2, new_loc_char, 2) == 0)
-        return FALSE;
-    else if (wcsncmp(LC_TRASH3, new_loc_char, 2) == 0)
-        return FALSE;
-    else if (wcsncmp(LC_TRASH4, new_loc_char, 2) == 0)
-        return FALSE;
-    else if (wcsncmp(LC_TRASH5, new_loc_char, 2) == 0)
-        return FALSE;
-    else if (wcsncmp(LC_TRASH6, new_loc_char, 2) == 0)
-        return FALSE;
-    else if (wcsncmp(WC_MAGLA, new_loc_char, 2) == 0)
-        return FALSE;
-    else if (wcsncmp(WC_FIRE, new_loc_char, 2) == 0)
-        return FALSE;
+    if ((wcsncmp(WC_TREE, new_loc_char, 3) == 0) ||
+        (wcsncmp(WC_BIN, new_loc_char, 2) == 0) ||
+        (wcsncmp(LC_TRASH1, new_loc_char, 2) == 0) ||
+        (wcsncmp(LC_TRASH2, new_loc_char, 2) == 0) ||
+        (wcsncmp(LC_TRASH3, new_loc_char, 2) == 0) ||
+        (wcsncmp(LC_TRASH4, new_loc_char, 2) == 0) ||
+        (wcsncmp(LC_TRASH5, new_loc_char, 2) == 0) ||
+        (wcsncmp(LC_TRASH6, new_loc_char, 2) == 0) ||
+        (wcsncmp(WC_MAGLA, new_loc_char, 2) == 0) ||
+        (wcsncmp(WC_FIRE, new_loc_char, 2) == 0))
+            return FALSE;
+
     return TRUE;
 }
 
@@ -89,7 +81,6 @@ void Player::mvup()
     yLoc--;
 }
 
-
 void Player::mvdn()
 {
     face_direction = FACING_DOWN;
@@ -141,26 +132,20 @@ int Player::grabbed_trash(int facing_y, int facing_x)
     mvin_wch(facing_y, facing_x, &facing_block);
     fb_chars = facing_block.chars;
 
-    if (wcsncmp(LC_TRASH1, fb_chars, 2) == 0)
-        goto hold_it;
-    else if (wcsncmp(LC_TRASH2, fb_chars, 2) == 0)
-        goto hold_it;
-    else if (wcsncmp(LC_TRASH3, fb_chars, 2) == 0)
-        goto hold_it;
-    else if (wcsncmp(LC_TRASH4, fb_chars, 2) == 0)
-        goto hold_it;
-    else if (wcsncmp(LC_TRASH5, fb_chars, 2) == 0)
-        goto hold_it;
-    else if (wcsncmp(LC_TRASH6, fb_chars, 2) == 0)
-        goto hold_it;
+    if ((wcsncmp(LC_TRASH1, fb_chars, 2) == 0) ||
+        (wcsncmp(LC_TRASH2, fb_chars, 2) == 0) ||
+        (wcsncmp(LC_TRASH3, fb_chars, 2) == 0) ||
+        (wcsncmp(LC_TRASH4, fb_chars, 2) == 0) ||
+        (wcsncmp(LC_TRASH5, fb_chars, 2) == 0) ||
+        (wcsncmp(LC_TRASH6, fb_chars, 2) == 0))
+    {
+        wcsncpy(item_holding_char, facing_block.chars, 2);
+        setcchar(&item_hold_print_char, facing_block.chars, WA_NORMAL, 12, NULL);
+        wave->clean_beach(facing_y - 9);
+        return TRUE;
+    }
 
     return FALSE;
-
-    hold_it:
-    wcsncpy(item_holding_char, facing_block.chars, 2);
-    setcchar(&item_hold_print_char, facing_block.chars, WA_NORMAL, 12, NULL);
-    wave->clean_beach(facing_y - 9);
-    return TRUE;
 }
 
 int Player::tossed_trash(int facing_y, int facing_x)
@@ -226,7 +211,7 @@ void Player::action()
     {
         if (xLoc > 77)
             return;
-        facing_x += 2;
+        facing_x += 2; // this is intentional
     }
     else if (face_direction == FACING_DOWN)
     {

@@ -51,7 +51,7 @@ void print_base(int trash_qty)
             else if (y == 13 && x == 53)
             {
                 add_wch(&bin);
-                // x++; We don't need this for some reason
+                // x++; We don't need this
             }
             else if (y > 8 && x > 45)
                 add_wch(&sand);
