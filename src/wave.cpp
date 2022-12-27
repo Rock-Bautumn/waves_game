@@ -1,7 +1,7 @@
 #ifndef WAVE_H
 #define WAVE_H
 
-#include "waves.h"
+#include "waves.hpp"
 #define LC_WAVE L"🌊"
 #define LC_TRASH1 L"👢"
 #define LC_TRASH2 L"📰"
@@ -15,42 +15,37 @@ class Wave
 {
     public:
         char beach[15] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        Wave(void);
-        long int get_start();
-        void update();
+        Wave();
+
+    void update();
         void display();
         void clean_beach(int beach_num);
         cchar_t *get_trash(int beach_num);
 
     private:
-        cchar_t wave_char;
-        cchar_t trash1_char;
-        cchar_t trash2_char;
-        cchar_t trash3_char;
-        cchar_t trash4_char;
-        cchar_t trash5_char;
-        cchar_t trash6_char;
-        struct timespec start_time;
-        struct timespec last_update;
+        cchar_t wave_char{};
+        cchar_t trash1_char{};
+        cchar_t trash2_char{};
+        cchar_t trash3_char{};
+        cchar_t trash4_char{};
+        cchar_t trash5_char{};
+        cchar_t trash6_char{};
+        struct timespec start_time{};
+        struct timespec last_update{};
 };
 
-Wave::Wave(void)
+Wave::Wave()
 {
-    setcchar(&wave_char, LC_WAVE, WA_NORMAL, 9, NULL);
-    setcchar(&trash1_char, LC_TRASH1, WA_NORMAL, 10, NULL);
-    setcchar(&trash2_char, LC_TRASH2, WA_NORMAL, 10, NULL);
-    setcchar(&trash3_char, LC_TRASH3, WA_NORMAL, 10, NULL);
-    setcchar(&trash4_char, LC_TRASH4, WA_NORMAL, 10, NULL);
-    setcchar(&trash5_char, LC_TRASH5, WA_NORMAL, 10, NULL);
-    setcchar(&trash6_char, LC_TRASH6, WA_NORMAL, 10, NULL);
-    clock_gettime(CLOCK_MONOTONIC_COARSE, &start_time);
+    setcchar(&wave_char, LC_WAVE, WA_NORMAL, 9, nullptr);
+    setcchar(&trash1_char, LC_TRASH1, WA_NORMAL, 10, nullptr);
+    setcchar(&trash2_char, LC_TRASH2, WA_NORMAL, 10, nullptr);
+    setcchar(&trash3_char, LC_TRASH3, WA_NORMAL, 10, nullptr);
+    setcchar(&trash4_char, LC_TRASH4, WA_NORMAL, 10, nullptr);
+    setcchar(&trash5_char, LC_TRASH5, WA_NORMAL, 10, nullptr);
+    setcchar(&trash6_char, LC_TRASH6, WA_NORMAL, 10, nullptr);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start_time);
     last_update.tv_sec = start_time.tv_sec;
     last_update.tv_nsec = start_time.tv_nsec;
-}
-
-long int Wave::get_start()
-{
-    return start_time.tv_sec;
 }
 
 void Wave::update()
@@ -58,7 +53,7 @@ void Wave::update()
     struct timespec this_time;
     size_t frame_num;
 
-    clock_gettime(CLOCK_MONOTONIC_COARSE, &this_time);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &this_time);
     frame_num = this_time.tv_sec - start_time.tv_sec;
     if ((this_time.tv_sec - last_update.tv_sec) > 0)
     {
@@ -69,7 +64,7 @@ void Wave::update()
 
     if (frame_num >= 15)
     {
-        clock_gettime(CLOCK_MONOTONIC_COARSE, &start_time);
+        clock_gettime(CLOCK_MONOTONIC_RAW, &start_time);
         last_update.tv_sec = start_time.tv_sec;
         last_update.tv_nsec = start_time.tv_nsec;
     }
@@ -104,10 +99,10 @@ void Wave::clean_beach(int beach_num)
 }
 void Wave::display()
 {
-    struct timespec this_time;
+    struct timespec this_time{};
     int yLoc, i;
 
-    clock_gettime(CLOCK_MONOTONIC_COARSE, &this_time);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &this_time);
     yLoc = this_time.tv_sec - start_time.tv_sec;
     mvadd_wch(9 + yLoc, 44, &wave_char);
     for (i = 0; i < 15; i++)
