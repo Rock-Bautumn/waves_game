@@ -1,17 +1,22 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "waves.h"
+#include "waves.hpp"
 #include "map.h"
-#include "wave.h"
+#include "wave.cpp"
+#include <memory>
+#include <utility>
 
-#define CHAR_PLAYER L"🧍‍♀️"
+using std::shared_ptr;
 
-enum facing_directions { UNUSED_DIR, FACING_UP, FACING_LEFT, FACING_RIGHT, FACING_DOWN };
+#define CHAR_PLAYER L"😀"
+
+enum facing_directions {
+    UNUSED_DIR, FACING_UP, FACING_LEFT, FACING_RIGHT, FACING_DOWN
+};
 
 
-int safe_to_move(wchar_t *new_loc_char)
-{
+int safe_to_move(wchar_t *new_loc_char) {
     if ((wcsncmp(WC_TREE, new_loc_char, 3) == 0) ||
         (wcsncmp(WC_BIN, new_loc_char, 2) == 0) ||
         (wcsncmp(LC_TRASH1, new_loc_char, 2) == 0) ||
@@ -22,54 +27,62 @@ int safe_to_move(wchar_t *new_loc_char)
         (wcsncmp(LC_TRASH6, new_loc_char, 2) == 0) ||
         (wcsncmp(WC_MAGLA, new_loc_char, 2) == 0) ||
         (wcsncmp(WC_FIRE, new_loc_char, 2) == 0))
-            return FALSE;
+        return FALSE;
 
     return TRUE;
 }
 
 
-class Player
-{
-    public:
-        Player(Wave *wave, int y, int x, const wchar_t *c);
-        void mvup();
-        void mvdn();
-        void mvrt();
-        void mvlt();
-        int getmv();
-        void display();
-        void update();
-        int get_trash_qty();
-        int fire_is_lit();
+class Player {
+    shared_ptr<Wave> wave;
+    int xLoc, yLoc, bin_trash_qty = 0, face_direction = UNUSED_DIR;
+    cchar_t charchar = {0};
+    cchar_t standingon;
+    wchar_t item_holding_char[5] = L"";
+    cchar_t item_hold_print_char = {0};
+    struct timespec fire_start_time = {0, 0};
+    cchar_t fire_char = {0};
+    struct timespec last_update;
 
-    private:
-        Wave *wave;
-        int xLoc, yLoc, bin_trash_qty = 0, face_direction = UNUSED_DIR;
-        cchar_t charchar = { 0 };
-        cchar_t standingon;
-        wchar_t item_holding_char[5] = L"";
-        cchar_t item_hold_print_char = { 0 };
-        struct timespec fire_start_time = { 0 , 0 };
-        cchar_t fire_char = { 0 };
-        struct timespec last_update;
-        int grabbed_trash(int facing_y, int facing_x);
-        int tossed_trash(int facing_y, int facing_x);
-        int used_magla(int facing_y, int facing_x);
-        void action();
+    int grabbed_trash(int facing_y, int facing_x);
+
+    int tossed_trash(int facing_y, int facing_x);
+
+    int used_magla(int facing_y, int facing_x);
+
+    void action();
+
+public:
+    Player(shared_ptr<Wave> wave, int y, int x, const wchar_t *c);
+
+    void mv_up();
+
+    void mv_dn();
+
+    void mvrt();
+
+    void mvlt();
+
+    int getmv();
+
+    void display();
+
+    void update();
+
+    int get_trash_qty() const;
+
+    int fire_is_lit() const;
 };
 
-Player::Player(Wave *this_wave, int y, int x,  const wchar_t *c)
-{
+Player::Player(shared_ptr<Wave> wave, int y, int x, const wchar_t *c) {
     xLoc = x;
     yLoc = y;
-
-    wave = this_wave;
-    setcchar(&charchar, c, WA_NORMAL, 10, NULL);
-    setcchar(&fire_char, WC_FIRE, WA_NORMAL, 10, NULL);
+    this->wave = std::move(wave);
+    setcchar(&charchar, c, WA_NORMAL, 10, nullptr);
+    setcchar(&fire_char, WC_FIRE, WA_NORMAL, 10, nullptr);
 }
 
-void Player::mvup()
-{
+void Player::mv_up() {
     face_direction = FACING_UP;
     mvin_wch(yLoc - 1, xLoc, &standingon);
     if (yLoc == 9 || !safe_to_move(standingon.chars))
@@ -80,8 +93,7 @@ void Player::mvup()
     yLoc--;
 }
 
-void Player::mvdn()
-{
+void Player::mv_dn() {
     face_direction = FACING_DOWN;
     mvin_wch(yLoc + 1, xLoc, &standingon);
     if (yLoc == 23 || !safe_to_move(standingon.chars))
@@ -92,8 +104,7 @@ void Player::mvdn()
     yLoc++;
 }
 
-void Player::mvlt()
-{
+void Player::mvlt() {
     face_direction = FACING_LEFT;
     mvin_wch(yLoc, xLoc - 1, &standingon);
     if (xLoc < 47 || !safe_to_move(standingon.chars))
@@ -101,8 +112,7 @@ void Player::mvlt()
     xLoc--;
 }
 
-void Player::mvrt()
-{
+void Player::mvrt() {
     face_direction = FACING_RIGHT;
     mvin_wch(yLoc, xLoc + 1, &standingon);
     if (xLoc > 76 || !safe_to_move(standingon.chars))
@@ -113,16 +123,14 @@ void Player::mvrt()
     xLoc++;
 }
 
-int Player::fire_is_lit()
-{
+int Player::fire_is_lit() const {
     if (fire_start_time.tv_sec == 0)
         return FALSE;
     return TRUE;
 }
 
-int Player::grabbed_trash(int facing_y, int facing_x)
-{
-    cchar_t facing_block = { 0 };
+int Player::grabbed_trash(int facing_y, int facing_x) {
+    cchar_t facing_block = {0};
     wchar_t *fb_chars;
 
     if (wcsncmp(item_holding_char, L"", 2) != 0)
@@ -136,10 +144,9 @@ int Player::grabbed_trash(int facing_y, int facing_x)
         (wcsncmp(LC_TRASH3, fb_chars, 2) == 0) ||
         (wcsncmp(LC_TRASH4, fb_chars, 2) == 0) ||
         (wcsncmp(LC_TRASH5, fb_chars, 2) == 0) ||
-        (wcsncmp(LC_TRASH6, fb_chars, 2) == 0))
-    {
+        (wcsncmp(LC_TRASH6, fb_chars, 2) == 0)) {
         wcsncpy(item_holding_char, facing_block.chars, 2);
-        setcchar(&item_hold_print_char, facing_block.chars, WA_NORMAL, 12, NULL);
+        setcchar(&item_hold_print_char, facing_block.chars, WA_NORMAL, 12, nullptr);
         wave->clean_beach(facing_y - 9);
         return TRUE;
     }
@@ -147,17 +154,14 @@ int Player::grabbed_trash(int facing_y, int facing_x)
     return FALSE;
 }
 
-int Player::tossed_trash(int facing_y, int facing_x)
-{
-    cchar_t facing_block = { 0 };
+int Player::tossed_trash(int facing_y, int facing_x) {
+    cchar_t facing_block = {0};
     wchar_t *fb_chars;
 
     mvin_wch(facing_y, facing_x, &facing_block);
     fb_chars = facing_block.chars;
-    if (wcsncmp(WC_BIN, fb_chars, 2) == 0)
-    {
-        if (wcsncmp(item_holding_char, L"", 2) != 0)
-        {
+    if (wcsncmp(WC_BIN, fb_chars, 2) == 0) {
+        if (wcsncmp(item_holding_char, L"", 2) != 0) {
             wcsncpy(item_holding_char, L"", 2);
             wcsncpy(item_hold_print_char.chars, L"", 2);
             bin_trash_qty++;
@@ -170,9 +174,8 @@ int Player::tossed_trash(int facing_y, int facing_x)
 }
 
 
-int Player::used_magla(int facing_y, int facing_x)
-{
-    cchar_t facing_block = { 0 };
+int Player::used_magla(int facing_y, int facing_x) {
+    cchar_t facing_block = {0};
     wchar_t *fb_chars;
 
     mvin_wch(facing_y, facing_x, &facing_block);
@@ -180,62 +183,48 @@ int Player::used_magla(int facing_y, int facing_x)
     if (wcsncmp(WC_MAGLA, fb_chars, 2) != 0)
         return FALSE;
 
-    if (bin_trash_qty > 0)
-    {
-        clock_gettime(CLOCK_MONOTONIC_COARSE, &fire_start_time);
+    if (bin_trash_qty > 0) {
+        clock_gettime(CLOCK_MONOTONIC_RAW, &fire_start_time);
         last_update.tv_sec = fire_start_time.tv_sec;
     }
     return TRUE;
 }
 
-void Player::action()
-{
+void Player::action() {
     int facing_x = xLoc;
     int facing_y = yLoc;
 
-    if (face_direction == FACING_UP)
-    {
+    if (face_direction == FACING_UP) {
         if (yLoc < 10)
             return;
         facing_y--;
-    }
-    else if (face_direction == FACING_LEFT)
-    {
+    } else if (face_direction == FACING_LEFT) {
         if (xLoc < 47)
             return;
         facing_x--;
-    }
-    else if (face_direction == FACING_RIGHT)
-    {
+    } else if (face_direction == FACING_RIGHT) {
         if (xLoc > 77)
             return;
         facing_x += 2; // this is intentional
-    }
-    else if (face_direction == FACING_DOWN)
-    {
+    } else if (face_direction == FACING_DOWN) {
         if (yLoc > 22)
             return;
         facing_y++;
     }
-    if (grabbed_trash(facing_y, facing_x) == TRUE)
-        ;
-    else if (tossed_trash(facing_y, facing_x) == TRUE)
-        ;
-    else if (used_magla(facing_y, facing_x) == TRUE)
-        ;
+    if (grabbed_trash(facing_y, facing_x) == TRUE) {}
+    else if (tossed_trash(facing_y, facing_x) == TRUE) {}
+    else if (used_magla(facing_y, facing_x) == TRUE) {}
 }
 
-int Player::getmv()
-{
+int Player::getmv() {
     int choice = getch();
 
-    switch(choice)
-    {
+    switch (choice) {
         case KEY_UP:
-            mvup();
+            mv_up();
             break;
         case KEY_DOWN:
-            mvdn();
+            mv_dn();
             break;
         case KEY_LEFT:
             mvlt();
@@ -252,20 +241,17 @@ int Player::getmv()
     return choice;
 }
 
-void Player::update()
-{
-    struct timespec this_time;
+void Player::update() {
+    struct timespec this_time{};
     size_t frame_num;
 
-    clock_gettime(CLOCK_MONOTONIC_COARSE, &this_time);
+    clock_gettime(CLOCK_MONOTONIC_RAW, &this_time);
     frame_num = this_time.tv_sec - fire_start_time.tv_sec;
     if (frame_num < 0)
         return;
     // do once per second
-    if ((this_time.tv_sec - last_update.tv_sec) > 0)
-    {
-        if (fire_is_lit())
-        {
+    if ((this_time.tv_sec - last_update.tv_sec) > 0) {
+        if (fire_is_lit()) {
             bin_trash_qty--;
 
             if (bin_trash_qty <= 0)
@@ -277,8 +263,7 @@ void Player::update()
 
 }
 
-void Player::display()
-{
+void Player::display() {
     mvadd_wch(yLoc, xLoc, &charchar);
     mvadd_wchstr(10, 16, &item_hold_print_char);
     if (fire_is_lit())
@@ -286,8 +271,7 @@ void Player::display()
 
 }
 
-int Player::get_trash_qty()
-{
+int Player::get_trash_qty() const {
     return bin_trash_qty;
 }
 
